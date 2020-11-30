@@ -32,7 +32,20 @@ uint32_t Message_motd_args::read(::apache::thrift::protocol::TProtocol* iprot) {
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->Value);
+          this->__isset.Value = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -45,6 +58,10 @@ uint32_t Message_motd_args::write(::apache::thrift::protocol::TProtocol* oprot) 
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("Message_motd_args");
+
+  xfer += oprot->writeFieldBegin("Value", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->Value);
+  xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -60,6 +77,10 @@ uint32_t Message_motd_pargs::write(::apache::thrift::protocol::TProtocol* oprot)
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("Message_motd_pargs");
+
+  xfer += oprot->writeFieldBegin("Value", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->Value)));
+  xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -174,18 +195,19 @@ uint32_t Message_motd_presult::read(::apache::thrift::protocol::TProtocol* iprot
   return xfer;
 }
 
-void MessageClient::motd(std::string& _return)
+void MessageClient::motd(std::string& _return, const std::string& Value)
 {
-  send_motd();
+  send_motd(Value);
   recv_motd(_return);
 }
 
-void MessageClient::send_motd()
+void MessageClient::send_motd(const std::string& Value)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("motd", ::apache::thrift::protocol::T_CALL, cseqid);
 
   Message_motd_pargs args;
+  args.Value = &Value;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -273,7 +295,7 @@ void MessageProcessor::process_motd(int32_t seqid, ::apache::thrift::protocol::T
 
   Message_motd_result result;
   try {
-    iface_->motd(result.success);
+    iface_->motd(result.success, args.Value);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
@@ -311,19 +333,20 @@ void MessageProcessor::process_motd(int32_t seqid, ::apache::thrift::protocol::T
   return processor;
 }
 
-void MessageConcurrentClient::motd(std::string& _return)
+void MessageConcurrentClient::motd(std::string& _return, const std::string& Value)
 {
-  int32_t seqid = send_motd();
+  int32_t seqid = send_motd(Value);
   recv_motd(_return, seqid);
 }
 
-int32_t MessageConcurrentClient::send_motd()
+int32_t MessageConcurrentClient::send_motd(const std::string& Value)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
   oprot_->writeMessageBegin("motd", ::apache::thrift::protocol::T_CALL, cseqid);
 
   Message_motd_pargs args;
+  args.Value = &Value;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

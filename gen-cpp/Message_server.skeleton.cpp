@@ -18,7 +18,7 @@ class MessageHandler : virtual public MessageIf {
     // Your initialization goes here
   }
 
-  void motd(std::string& _return) {
+  void motd(std::string& _return, const std::string& Value) {
     // Your implementation goes here
     printf("motd\n");
   }

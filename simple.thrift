@@ -1,4 +1,4 @@
 service Message {
-   string motd()
+   string motd(1: string Value)
 }
 

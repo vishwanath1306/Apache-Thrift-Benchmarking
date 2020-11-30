@@ -22,7 +22,7 @@
 class MessageIf {
  public:
   virtual ~MessageIf() {}
-  virtual void motd(std::string& _return) = 0;
+  virtual void motd(std::string& _return, const std::string& Value) = 0;
 };
 
 class MessageIfFactory {
@@ -52,24 +52,35 @@ class MessageIfSingletonFactory : virtual public MessageIfFactory {
 class MessageNull : virtual public MessageIf {
  public:
   virtual ~MessageNull() {}
-  void motd(std::string& /* _return */) {
+  void motd(std::string& /* _return */, const std::string& /* Value */) {
     return;
   }
 };
 
+typedef struct _Message_motd_args__isset {
+  _Message_motd_args__isset() : Value(false) {}
+  bool Value :1;
+} _Message_motd_args__isset;
 
 class Message_motd_args {
  public:
 
   Message_motd_args(const Message_motd_args&);
   Message_motd_args& operator=(const Message_motd_args&);
-  Message_motd_args() {
+  Message_motd_args() : Value() {
   }
 
   virtual ~Message_motd_args() noexcept;
+  std::string Value;
 
-  bool operator == (const Message_motd_args & /* rhs */) const
+  _Message_motd_args__isset __isset;
+
+  void __set_Value(const std::string& val);
+
+  bool operator == (const Message_motd_args & rhs) const
   {
+    if (!(Value == rhs.Value))
+      return false;
     return true;
   }
   bool operator != (const Message_motd_args &rhs) const {
@@ -89,6 +100,7 @@ class Message_motd_pargs {
 
 
   virtual ~Message_motd_pargs() noexcept;
+  const std::string* Value;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -174,8 +186,8 @@ class MessageClient : virtual public MessageIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void motd(std::string& _return);
-  void send_motd();
+  void motd(std::string& _return, const std::string& Value);
+  void send_motd(const std::string& Value);
   void recv_motd(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -225,13 +237,13 @@ class MessageMultiface : virtual public MessageIf {
     ifaces_.push_back(iface);
   }
  public:
-  void motd(std::string& _return) {
+  void motd(std::string& _return, const std::string& Value) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->motd(_return);
+      ifaces_[i]->motd(_return, Value);
     }
-    ifaces_[i]->motd(_return);
+    ifaces_[i]->motd(_return, Value);
     return;
   }
 
@@ -267,8 +279,8 @@ class MessageConcurrentClient : virtual public MessageIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void motd(std::string& _return);
-  int32_t send_motd();
+  void motd(std::string& _return, const std::string& Value);
+  int32_t send_motd(const std::string& Value);
   void recv_motd(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

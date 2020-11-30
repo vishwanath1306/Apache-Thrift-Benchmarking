@@ -12,15 +12,16 @@ using std::shared_ptr;
 
 int main(int argv, char * argc[]) {
     shared_ptr<TTransport> trans;
-    trans = make_shared<TSocket>("localhost", 9090);
+    trans = make_shared<TSocket>("localhost", 3062);
     trans = make_shared<TFramedTransport>(trans);
     auto proto = make_shared<TJSONProtocol>(trans);
     MessageClient client(proto);
 
     trans->open();
     std::string msg;
+    std::string data = "This is amazing";
     do {
-        client.motd(msg);
+        client.motd(msg, data);
         std::cout << msg << std::endl;
         std::cout << "Enter to call motd, 'q' to quit" << std::endl;
         std::getline(std::cin, msg);
