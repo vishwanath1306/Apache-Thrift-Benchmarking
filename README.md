@@ -18,3 +18,20 @@ make client
 ./client
 
 ```
+
+## Running the EchoNonBlockingServer
+
+For running the server 
+
+```
+cd echoservice-nb
+docker build -t nbecho .
+docker run --rm -it -p 3062:3062 -d nbecho:latest
+```
+
+For running the client
+```
+cd echoservice-nb
+make client
+./client
+```
