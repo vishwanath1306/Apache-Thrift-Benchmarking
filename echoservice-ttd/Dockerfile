@@ -5,8 +5,8 @@ ARG NUM_CPUS=4
 
 COPY ./ /echo-service
 RUN cd /echo-service \
-    && make 
+    && make server.o 
 
-CMD ["./server"]
+CMD ["./server.o"]
 
 WORKDIR /echo-service

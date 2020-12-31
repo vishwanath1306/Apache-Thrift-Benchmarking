@@ -8,15 +8,15 @@ LIBS = -lthrift
 CFLAGS = -Wall -std=c++11
 THRIFT = thrift -gen cpp
 
-all: client server
+all: client.o server.o
 
 gen-cpp/Message.cpp: $(IDL)
 	$(THRIFT) $(IDL)
 
-server: $(SVRSRC)
+server.o: $(SVRSRC)
 	$(CC) -o $@ $(SVRSRC) $(CFLAGS) $(LIBS)
 
-client: $(CLISRC)
+client.o: $(CLISRC)
 	$(CC) -o $@ $(CLISRC) $(CFLAGS) $(LIBS)
 	
 clean:

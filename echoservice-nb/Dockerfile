@@ -17,8 +17,8 @@ RUN git clone https://github.com/apache/thrift.git ; \
     ldconfig ; 
 
 RUN cd /echo-nbservice ; \
-    make server
+    make server.o
 
-CMD ["./server"]
+CMD ["./server.o"]
 
 WORKDIR /echo-nbservice
