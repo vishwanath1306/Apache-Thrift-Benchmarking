@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+    echoservice:
+        ports:
+            - '3062:3062'
+        image: 'echoservice:latest'
+        hostname: 'echoservice'
+    vish:
+        ports: 
+            - '8080:8080'
+        image: 'vish:latest'
+        hostname: 'vish'
+        volumes:
+            - ./nginx-openresty/app.lua:/usr/local/openresty/nginx/lua-scripts/app.lua
+            - ./nginx-openresty/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+            - ./nginx-openresty/gen-lua:/gen-lua

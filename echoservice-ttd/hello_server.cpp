@@ -27,7 +27,7 @@ class HelloWorldHandler: public HelloWorldIf{
             std::thread::id curr_thread = std::this_thread::get_id();
 
             std::cout<< "The thread is "<< curr_thread <<std::endl;
-            _return.assign("Hello World");
+            _return.assign("This is Sparta");
         }
 };
 
