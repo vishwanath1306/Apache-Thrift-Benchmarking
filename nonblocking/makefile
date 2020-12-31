@@ -8,7 +8,7 @@ LIBS = -lthrift -lthriftnb -levent -lpthread
 CFLAGS = -Wall -std=c++11
 THRIFT = thrift -gen cpp
 
-all: server client
+all: server.o client.o
 
 gen-cpp/TradeHistory.cpp: $(IDL)
 	$(THRIFT) $(IDL)
@@ -16,10 +16,10 @@ gen-cpp/TradeHistory.cpp: $(IDL)
 gen-cpp/trade_report_types.cpp: $(IDL)
 	$(THRIFT) $(IDL)
 
-server: $(SVRSRC)
+server.o: $(SVRSRC)
 	$(CC) -o $@ $(SVRSRC) $(CFLAGS) $(LIBS)
 
-client: $(CLISRC)
+client.o: $(CLISRC)
 	$(CC) -o $@ $(CLISRC) $(CFLAGS) $(LIBS)
 	
 clean:
