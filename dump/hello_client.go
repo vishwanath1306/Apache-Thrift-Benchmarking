@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"./gen-go/hello"
+	// "./gen-go/hello"
 
-	// "hellothrift/hello"
+	"hellothrift/hello"
 
 	"git.apache.org/thrift.git/lib/go/thrift"
 )

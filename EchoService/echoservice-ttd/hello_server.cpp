@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <thread>
+#include <unistd.h>
 
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
@@ -27,6 +28,7 @@ class HelloWorldHandler: public HelloWorldIf{
             std::thread::id curr_thread = std::this_thread::get_id();
 
             std::cout<< "The thread is "<< curr_thread <<std::endl;
+            sleep(1);
             _return.assign("This is Sparta");
         }
 };

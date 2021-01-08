@@ -1,5 +1,4 @@
 #include "gen-cpp/HelloWorld.h"
-#include <thrift/Thrift.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/protocol/TCompactProtocol.h>
@@ -27,9 +26,9 @@ namespace keywords = boost::log::keywords;
 void init_logging(){
     logging::add_file_log(
         
-        keywords::file_name="sample_nonblocking.log",
+        keywords::file_name="sample_threadpool.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="sample_nonblocking.log",
+        keywords::target_file_name="sample_threadpool.log",
         keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%"
         );
 
@@ -40,12 +39,13 @@ int main(){
 
     init_logging();
     
-    auto trans_ep = make_shared<TSocket>("localhost", 3062);
-    auto trans = make_shared<TFramedTransport>(trans_ep);
-    auto proto = make_shared<TCompactProtocolT<TFramedTransport>>(trans);
-
+    shared_ptr<TTransport> trans;
+    trans = make_shared<TSocket>("localhost", 3063);
+    trans = make_shared<TBufferedTransport>(trans);
+    auto proto = make_shared<TCompactProtocol>(trans);
     HelloWorldClient client(proto);
-    std::cout<<"Here"<<std::endl;
+
+    // std::cout<<"Here"<<std::endl;
     try
     {
         trans->open();

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <atomic>
+#include <unistd.h>
 
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::protocol;
@@ -29,6 +30,7 @@ class HelloWorldHandler : virtual public HelloWorldIf{
         void hello_world(std::string& _return) override{
 
             std::cout<<"Current Thread is "<<std::this_thread::get_id()<<std::endl;
+            sleep(1);
             _return.assign("Hello World");
         }
 };

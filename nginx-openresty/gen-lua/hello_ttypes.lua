@@ -6,5 +6,5 @@
 --
 
 
-require 'Thrift'
-require 'hello_constants'
+local Thrift = require 'Thrift'
+local hello_constants = require 'hello_constants'

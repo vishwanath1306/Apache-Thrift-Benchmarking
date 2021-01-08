@@ -51,7 +51,7 @@ int main(){
     auto start = std::chrono::high_resolution_clock::now();
 
     client.hello_world(msg);
-    std::cout << msg << std::endl;
+    // std::cout << msg << std::endl;
     auto elapsed = std::chrono::high_resolution_clock::now() - start;
     long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
