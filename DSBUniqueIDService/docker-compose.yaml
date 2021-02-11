@@ -1,0 +1,17 @@
+version: '3.3'
+services:
+    uniqueid-ttd:
+        ports:
+          - '3066:3066'
+        image: 'uniqueid-ttd:latest'
+        hostname: 'uniqueid-ttd'
+    uniqueid-nb:
+      ports:
+        - '3067:3067'
+      image: 'uniqueid-nb:latest'
+      hostname: 'uniqueid-nb'
+    unqiueid-tp:
+      ports:
+        - '3068:3068'
+      image: 'uniqueid-tp:latest'
+      hostname: 'uniqueid-tp:latest'
