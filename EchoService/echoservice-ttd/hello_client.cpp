@@ -24,16 +24,16 @@ namespace keywords = boost::log::keywords;
 void init_logging(){
     logging::add_file_log(
         
-        keywords::file_name="sample_tthreaded.log",
+        keywords::file_name="echoservice_ttd_500.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="sample_tthreaded.log",
+        keywords::target_file_name="echoservice_ttd_500.log",
         keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%"
         );
 
         logging::add_common_attributes();
 }
 
-int main(){
+int main(int argc, char* argv[]){
 
     init_logging();
     
@@ -42,19 +42,28 @@ int main(){
     trans = make_shared<TFramedTransport>(trans);
     auto proto = make_shared<TJSONProtocol>(trans);
 
+    int64_t seconds = atoi(argv[1]);
+    int64_t counter = 0;
+
     HelloWorldClient client(proto);
 
     trans->open();
+    while(true){
+        if(counter == seconds){
+            break;
+        }
+        std::string msg;
+        auto start = std::chrono::high_resolution_clock::now();
 
-    std::string msg;
-    
-    auto start = std::chrono::high_resolution_clock::now();
+        client.hello_world(msg);
+        // std::cout << msg << std::endl;
+        auto elapsed = std::chrono::high_resolution_clock::now() - start;
+        long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-    client.hello_world(msg);
-    // std::cout << msg << std::endl;
-    auto elapsed = std::chrono::high_resolution_clock::now() - start;
-    long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+        BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
 
-    BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
+        counter++;
+        sleep(1);
+    }
     trans->close();
 }

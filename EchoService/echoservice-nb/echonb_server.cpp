@@ -57,12 +57,12 @@ int main(){
     auto processor_fac = make_shared<HelloWorldProcessorFactory>(handler_fac);
     auto protocol_fac = make_shared<TCompactProtocolFactoryT<TMemoryBuffer>>();
 
-    auto thread_man = ThreadManager::newSimpleThreadManager(1);
+    auto thread_man = ThreadManager::newSimpleThreadManager(4);
     thread_man->threadFactory(make_shared<ThreadFactory>());
     thread_man->start();
 
     TNonblockingServer server(processor_fac, protocol_fac, trans, thread_man);
-    server.setNumIOThreads(1);
+    server.setNumIOThreads(4);
     server.serve();
 
     return 0;

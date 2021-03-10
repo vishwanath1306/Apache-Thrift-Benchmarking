@@ -23,21 +23,21 @@ namespace logging = boost::log;
 namespace keywords = boost::log::keywords;
 
 
-void init_logging(){
+void init_logging(std::string filename){
     logging::add_file_log(
         
-        keywords::file_name="uniqueid_threadpool.log",
+        keywords::file_name=filename,
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="uniqueid_threadpool.log",
+        keywords::target_file_name=filename,
         keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%"
         );
 
         logging::add_common_attributes();
 }
 
-int main(){
+int main(int argc, char* argv[]){
 
-    init_logging();
+    init_logging(argv[3]);
     
     shared_ptr<TTransport> trans;
     trans = make_shared<TSocket>("localhost", 3068);
@@ -45,27 +45,31 @@ int main(){
     auto proto = make_shared<TCompactProtocol>(trans);
     UniqueIDClient client(proto);
 
+    int64_t seconds = atoi(argv[1]);
+    int64_t counter = 0;
+    int64_t reqps = atoi(argv[2]);
     // std::cout<<"Here"<<std::endl;
-    try
-    {
-        trans->open();
-        std::string input;
-    
-        auto start = std::chrono::high_resolution_clock::now();
+    trans->open();
+    while(true){
 
-        client.compute_unique_id(input, 100);
-        std::cout << input << std::endl;
-        auto elapsed = std::chrono::high_resolution_clock::now() - start;
-        long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+        if(counter == seconds){
+            break;
+        }
+        
+        for(int64_t i = 1; i <= reqps; i++){
+            std::string input;
 
-        BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
+            auto start = std::chrono::high_resolution_clock::now();
 
+            client.compute_unique_id(input, 100);
+            auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+            BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
+        }
+        std::cout<<"Sent out "<<reqps<<" requests for "<<counter<<" seconds"<<std::endl;
+        sleep(1);
+        counter++;
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
+
     trans->close();
-
 }
