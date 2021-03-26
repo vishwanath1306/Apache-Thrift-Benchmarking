@@ -23,9 +23,9 @@ namespace keywords = boost::log::keywords;
 void init_logging(){
     logging::add_file_log(
         
-        keywords::file_name="matrix_multiplication_ttd.log",
+        keywords::file_name="mlinfer_ttd.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="matrix_multiplication_ttd.log",
+        keywords::target_file_name="mlinfer_ttd.log",
         keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%"
         );
 
@@ -39,7 +39,7 @@ int main(){
     srand(time(0));
 
     shared_ptr<TTransport> trans;
-    trans = make_shared<TSocket>("localhost", 3065);
+    trans = make_shared<TSocket>("localhost", 3056);
     trans = make_shared<TFramedTransport>(trans);
     auto proto = make_shared<TJSONProtocol>(trans);
 

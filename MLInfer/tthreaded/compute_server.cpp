@@ -97,7 +97,7 @@ int main(){
     auto handler_fac = make_shared<ComputeHandlerFactory>();
     auto proc_fac = make_shared<ComputeProcessorFactory>(handler_fac);
     
-    auto transport_server = make_shared<TServerSocket>(3065);
+    auto transport_server = make_shared<TServerSocket>(3056);
     auto transport_factory = make_shared<TFramedTransportFactory>();
     auto protocol_factory = make_shared<TJSONProtocolFactory>();
 
