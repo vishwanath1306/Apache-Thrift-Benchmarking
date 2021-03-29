@@ -13,6 +13,7 @@
 #include <thread>
 #include <unistd.h>
 #include <cstdlib>
+#include <vector>
 
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
@@ -77,6 +78,15 @@ class ComputeHandler: public ComputeIf {
         std::cout<<"Matrix values are "<<row<<" "<<column<<std::endl;
         matrix_multiplication(row, column);
         std::cout<<"Finished computation"<<std::endl;
+    }
+    virtual void compute_list(std::string& _return, const std::vector<int64_t>& values){
+        int value_len = values.size();
+
+        for(int i = 0; i < value_len; i++){
+            std::cout<<values[i]<<"  ";
+        }
+        std::cout<<std::endl;
+        _return.assign("Hello World");
     }
 };
 
