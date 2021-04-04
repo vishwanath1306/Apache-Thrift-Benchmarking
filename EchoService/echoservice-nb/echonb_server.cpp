@@ -51,7 +51,7 @@ class HelloWorldFactory: virtual public HelloWorldIfFactory{
 
 int main(){
 
-    auto trans = make_shared<TNonblockingServerSocket>(3062);
+    auto trans = make_shared<TNonblockingServerSocket>(3048);
 
     auto handler_fac = make_shared<HelloWorldFactory>();
     auto processor_fac = make_shared<HelloWorldProcessorFactory>(handler_fac);

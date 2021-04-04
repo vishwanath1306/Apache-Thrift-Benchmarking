@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+    echoservice-ttd:
+        ports:
+            - '3046:3046'
+        image: 'echoservice-ttd:latest'
+        hostname: 'echoservice-ttd'
+        container_name: 'echoservice-ttd'
+    echoservice-nb:
+        ports:
+            - '3047:3047'
+        image: 'echoservice-nb:latest'
+        hostname: 'echoservice-nb'
+        container_name: 'echoservice-nb'
+    echoservice-tp:
+        ports:
+            - '3048:3048'
+        image: 'echoservice-tp:latest'
+        hostname: 'echoservice-tp'
+        container_name: 'echoservice-tp'

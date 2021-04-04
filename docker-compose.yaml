@@ -1,7 +1,0 @@
-version: '3.3'
-services:
-    echoservice:
-        ports:
-            - '3062:3062'
-        image: 'echoservice:latest'
-        hostname: 'echoservice'

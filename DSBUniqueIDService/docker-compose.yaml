@@ -10,8 +10,8 @@ services:
         - '3067:3067'
       image: 'uniqueid-nb:latest'
       hostname: 'uniqueid-nb'
-    unqiueid-tp:
+    uniqueid-tp:
       ports:
         - '3068:3068'
       image: 'uniqueid-tp:latest'
-      hostname: 'uniqueid-tp:latest'
+      hostname: 'uniqueid-tp'

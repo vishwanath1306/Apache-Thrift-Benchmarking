@@ -40,7 +40,7 @@ int main(){
 
     init_logging();
     
-    auto trans_ep = make_shared<TSocket>("localhost", 3062);
+    auto trans_ep = make_shared<TSocket>("localhost", 3048);
     auto trans = make_shared<TFramedTransport>(trans_ep);
     auto proto = make_shared<TCompactProtocolT<TFramedTransport>>(trans);
 

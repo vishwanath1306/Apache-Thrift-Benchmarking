@@ -51,7 +51,7 @@ class HelloWorldHandlerFactory: public HelloWorldIfFactory{
 
 int main(){
     
-    const int port = 3063;
+    const int port = 3047;
     auto handler = make_shared<HelloWorldHandler>();			
     auto proc = make_shared<HelloWorldProcessor>(handler);		
     auto trans_svr = make_shared<TServerSocket>(port);		

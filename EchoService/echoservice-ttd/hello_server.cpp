@@ -52,7 +52,7 @@ int main(){
     auto handler_fac = make_shared<HelloWorldHandlerFactory>();
     auto proc_fac = make_shared<HelloWorldProcessorFactory>(handler_fac);
     
-    auto transport_server = make_shared<TServerSocket>(3062);
+    auto transport_server = make_shared<TServerSocket>(3046);
     auto transport_factory = make_shared<TFramedTransportFactory>();
     auto protocol_factory = make_shared<TJSONProtocolFactory>();
 
