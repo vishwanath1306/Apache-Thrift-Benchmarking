@@ -5,13 +5,16 @@ services:
             - '3056:3056'
         image: 'mlinfer-ttd:latest'
         hostname: 'mlinfer-ttd'
+        container_name: 'mlinfer-ttd'
     mlinfer-nb:
         ports:
             - '3057:3057'
         image: 'mlinfer-nb:latest'
         hostname: 'mlinfer-nb'
+        container_name: 'mlinfer-nb'
     mlinfer-tp:
         ports:
             - '3058:3058'
         image: 'mlinfer-tp:latest'
         hostname: 'mlinfer-tp'
+        container_name: 'mlinfer-tp'
