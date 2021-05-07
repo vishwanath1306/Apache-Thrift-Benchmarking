@@ -55,6 +55,7 @@ RUN curl https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-wit
     && rm libtorch.zip
 
 COPY ./ /mlinfer-ttd
+ENV USE_NNPACK=0
 RUN cd /mlinfer-ttd \
     && make server.o
 ENV LD_LIBRARY_PATH /libtorch/lib:/usr/local/lib

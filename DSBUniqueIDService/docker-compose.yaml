@@ -5,13 +5,16 @@ services:
           - '3066:3066'
         image: 'uniqueid-ttd:latest'
         hostname: 'uniqueid-ttd'
+        container_name: 'uniqueid-ttd'
     uniqueid-nb:
       ports:
         - '3067:3067'
       image: 'uniqueid-nb:latest'
       hostname: 'uniqueid-nb'
+      container_name: 'uniqueid-nb'
     uniqueid-tp:
       ports:
         - '3068:3068'
       image: 'uniqueid-tp:latest'
       hostname: 'uniqueid-tp'
+      container_name: 'uniqueid-tp'

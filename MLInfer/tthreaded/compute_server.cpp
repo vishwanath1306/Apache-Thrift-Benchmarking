@@ -79,13 +79,55 @@ class ComputeHandler: public ComputeIf {
         matrix_multiplication(row, column);
         std::cout<<"Finished computation"<<std::endl;
     }
-    virtual void compute_list(std::string& _return, const std::vector<int64_t>& values){
-        int value_len = values.size();
+    virtual void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double>>>& values){
+        torch::jit::script::Module module;
 
-        for(int i = 0; i < value_len; i++){
-            std::cout<<values[i]<<"  ";
+        std::vector<std::vector<std::vector<float>>> random_input(3, std::vector<std::vector<float>>(224, std::vector<float>(224, 1.0)));
+
+
+            for(int i = 0; i < 3; i++){
+            
+            for(int j = 0; j < 224; j++){
+                
+                for(int k = 0; k < 224; k++){
+                    random_input[i][j][k] = (float) values[i][j][k];
+                }
+            }
+
         }
-        std::cout<<std::endl;
+
+
+        try {
+            module = torch::jit::load("./traced_resnet_model.pt");
+        }catch (const c10::Error& e) {
+            std::cerr << "error loading the model\n";
+        }
+
+
+        std::cout<<"Entering dangerous space"<<std::endl;
+
+        auto tensor = torch::empty({1 * 3 * 224 * 224});
+        float* data = tensor.data_ptr<float>();
+
+        for (const auto& i: random_input){
+            for(const auto& j: i){
+                for(const auto& k: j){
+                    *data++ = k;
+                }
+            }
+        }
+
+        std::cout<<"Tensor values are: "<<std::endl;
+        std::cout << tensor.sizes() << std::endl;
+
+        std::vector<torch::jit::IValue> inputs;
+
+        inputs.emplace_back(tensor.resize_({1, 3, 224, 224}));
+        std::cout<< "Running inference on new data" << std::endl;
+        at::Tensor output = module.forward(inputs).toTensor();
+        std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
+        std::cout << "ok\n";
+
         _return.assign("Hello World");
     }
 };

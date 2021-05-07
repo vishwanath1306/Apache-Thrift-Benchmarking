@@ -217,7 +217,31 @@ uint32_t Compute_compute_list_args::read(::apache::thrift::protocol::TProtocol* 
             uint32_t _i4;
             for (_i4 = 0; _i4 < _size0; ++_i4)
             {
-              xfer += iprot->readI64(this->values[_i4]);
+              {
+                this->values[_i4].clear();
+                uint32_t _size5;
+                ::apache::thrift::protocol::TType _etype8;
+                xfer += iprot->readListBegin(_etype8, _size5);
+                this->values[_i4].resize(_size5);
+                uint32_t _i9;
+                for (_i9 = 0; _i9 < _size5; ++_i9)
+                {
+                  {
+                    this->values[_i4][_i9].clear();
+                    uint32_t _size10;
+                    ::apache::thrift::protocol::TType _etype13;
+                    xfer += iprot->readListBegin(_etype13, _size10);
+                    this->values[_i4][_i9].resize(_size10);
+                    uint32_t _i14;
+                    for (_i14 = 0; _i14 < _size10; ++_i14)
+                    {
+                      xfer += iprot->readDouble(this->values[_i4][_i9][_i14]);
+                    }
+                    xfer += iprot->readListEnd();
+                  }
+                }
+                xfer += iprot->readListEnd();
+              }
             }
             xfer += iprot->readListEnd();
           }
@@ -245,11 +269,27 @@ uint32_t Compute_compute_list_args::write(::apache::thrift::protocol::TProtocol*
 
   xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_LIST, 1);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->values.size()));
-    std::vector<int64_t> ::const_iterator _iter5;
-    for (_iter5 = this->values.begin(); _iter5 != this->values.end(); ++_iter5)
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_LIST, static_cast<uint32_t>(this->values.size()));
+    std::vector<std::vector<std::vector<double> > > ::const_iterator _iter15;
+    for (_iter15 = this->values.begin(); _iter15 != this->values.end(); ++_iter15)
     {
-      xfer += oprot->writeI64((*_iter5));
+      {
+        xfer += oprot->writeListBegin(::apache::thrift::protocol::T_LIST, static_cast<uint32_t>((*_iter15).size()));
+        std::vector<std::vector<double> > ::const_iterator _iter16;
+        for (_iter16 = (*_iter15).begin(); _iter16 != (*_iter15).end(); ++_iter16)
+        {
+          {
+            xfer += oprot->writeListBegin(::apache::thrift::protocol::T_DOUBLE, static_cast<uint32_t>((*_iter16).size()));
+            std::vector<double> ::const_iterator _iter17;
+            for (_iter17 = (*_iter16).begin(); _iter17 != (*_iter16).end(); ++_iter17)
+            {
+              xfer += oprot->writeDouble((*_iter17));
+            }
+            xfer += oprot->writeListEnd();
+          }
+        }
+        xfer += oprot->writeListEnd();
+      }
     }
     xfer += oprot->writeListEnd();
   }
@@ -272,11 +312,27 @@ uint32_t Compute_compute_list_pargs::write(::apache::thrift::protocol::TProtocol
 
   xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_LIST, 1);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->values)).size()));
-    std::vector<int64_t> ::const_iterator _iter6;
-    for (_iter6 = (*(this->values)).begin(); _iter6 != (*(this->values)).end(); ++_iter6)
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_LIST, static_cast<uint32_t>((*(this->values)).size()));
+    std::vector<std::vector<std::vector<double> > > ::const_iterator _iter18;
+    for (_iter18 = (*(this->values)).begin(); _iter18 != (*(this->values)).end(); ++_iter18)
     {
-      xfer += oprot->writeI64((*_iter6));
+      {
+        xfer += oprot->writeListBegin(::apache::thrift::protocol::T_LIST, static_cast<uint32_t>((*_iter18).size()));
+        std::vector<std::vector<double> > ::const_iterator _iter19;
+        for (_iter19 = (*_iter18).begin(); _iter19 != (*_iter18).end(); ++_iter19)
+        {
+          {
+            xfer += oprot->writeListBegin(::apache::thrift::protocol::T_DOUBLE, static_cast<uint32_t>((*_iter19).size()));
+            std::vector<double> ::const_iterator _iter20;
+            for (_iter20 = (*_iter19).begin(); _iter20 != (*_iter19).end(); ++_iter20)
+            {
+              xfer += oprot->writeDouble((*_iter20));
+            }
+            xfer += oprot->writeListEnd();
+          }
+        }
+        xfer += oprot->writeListEnd();
+      }
     }
     xfer += oprot->writeListEnd();
   }
@@ -449,13 +505,13 @@ void ComputeClient::recv_computed_value()
   return;
 }
 
-void ComputeClient::compute_list(std::string& _return, const std::vector<int64_t> & values)
+void ComputeClient::compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values)
 {
   send_compute_list(values);
   recv_compute_list(_return);
 }
 
-void ComputeClient::send_compute_list(const std::vector<int64_t> & values)
+void ComputeClient::send_compute_list(const std::vector<std::vector<std::vector<double> > > & values)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("compute_list", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -719,13 +775,13 @@ void ComputeConcurrentClient::recv_computed_value(const int32_t seqid)
   } // end while(true)
 }
 
-void ComputeConcurrentClient::compute_list(std::string& _return, const std::vector<int64_t> & values)
+void ComputeConcurrentClient::compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values)
 {
   int32_t seqid = send_compute_list(values);
   recv_compute_list(_return, seqid);
 }
 
-int32_t ComputeConcurrentClient::send_compute_list(const std::vector<int64_t> & values)
+int32_t ComputeConcurrentClient::send_compute_list(const std::vector<std::vector<std::vector<double> > > & values)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
