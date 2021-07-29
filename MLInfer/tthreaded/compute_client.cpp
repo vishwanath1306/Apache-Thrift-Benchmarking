@@ -28,9 +28,9 @@ namespace keywords = boost::log::keywords;
 void init_logging(){
     logging::add_file_log(
         
-        keywords::file_name="valimai_update.log",
+        keywords::file_name="mlinfer_ttd_wrk_new_1.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="valimai.log",
+        keywords::target_file_name="mlinfer_ttd_wrk_new_1.log",
         keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%",
         keywords::auto_flush = true
         );
@@ -83,35 +83,31 @@ class RESTProxyHandler: public Http::Handler{
         }
 
         void onRequest(const Http::Request& request, Http::ResponseWriter response){
+            // if (!mlinfer_transport->isOpen()){
+            //     mlinfer_transport->open();
+            // }
 
-            if(!mlinfer_transport->isOpen()){
-                mlinfer_transport->open();
-            }
+            shared_ptr<TTransport> socket(new TSocket("127.0.0.1", 3056));
+            shared_ptr<TFramedTransport> transport(new TFramedTransport(socket));
+            shared_ptr<TJSONProtocol> protocol(new TJSONProtocol(transport));
+            shared_ptr<ComputeClient> compute_client(new ComputeClient(protocol));
+            
+            transport->open();
 
             int z = 3, y = 224, x = 224;
             std::vector<std::vector<std::vector<double>>> random_input(z, std::vector<std::vector<double>>(y, std::vector<double>(x, 1.0)));
             
-            // Generating a random array
-            
-            //  for(int i = 0; i < z; i++){
-        
-            //     for(int j = 0; j < y; j++){
-            
-            //         for(int k = 0; k < x; k++){
-            //             random_input[i][j][k] = rand() % 10 + 1;
-            //         }
-            //     }
-            // }
-            
             std::string mono;
             auto start = std::chrono::high_resolution_clock::now();
-            mlinfer_client->compute_list(mono, random_input);
-            // mlinfer_client->computed_value(10, 10);
+            compute_client->compute_list(mono, random_input);
+            // mlinfer_client->compute_list(mono, random_input);
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
             long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
             BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
-            std::cout << mono << std::endl;
             response.send(Http::Code::Ok, "Finished Compute");
+
+            transport->close();
+            
         }
 };
 

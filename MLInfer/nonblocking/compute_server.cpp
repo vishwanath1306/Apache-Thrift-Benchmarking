@@ -57,9 +57,57 @@ class ComputeHandler: public ComputeIf {
             std::cout<<"Matrix values are "<< row << " "<< column <<std::endl;
             ml_inference();
         }
-        virtual void compute_list(std::string& _return, const std::vector<int64_t> & values){
-            _return.assign("Hello World");
+        virtual void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double>>>& values){
+        torch::jit::script::Module module;
+
+        std::vector<std::vector<std::vector<float>>> random_input(3, std::vector<std::vector<float>>(224, std::vector<float>(224, 1.0)));
+
+
+            for(int i = 0; i < 3; i++){
+            
+            for(int j = 0; j < 224; j++){
+                
+                for(int k = 0; k < 224; k++){
+                    random_input[i][j][k] = (float) values[i][j][k];
+                }
+            }
+
         }
+
+
+        try {
+            module = torch::jit::load("./traced_resnet_model.pt");
+        }catch (const c10::Error& e) {
+            std::cerr << "error loading the model\n";
+        }
+
+
+        std::cout<<"Entering dangerous space"<<std::endl;
+
+        auto tensor = torch::empty({1 * 3 * 224 * 224});
+        float* data = tensor.data_ptr<float>();
+
+        for (const auto& i: random_input){
+            for(const auto& j: i){
+                for(const auto& k: j){
+                    *data++ = k;
+                }
+            }
+        }
+
+        std::cout<<"Tensor values are: "<<std::endl;
+        std::cout << tensor.sizes() << std::endl;
+
+        std::vector<torch::jit::IValue> inputs;
+
+        inputs.emplace_back(tensor.resize_({1, 3, 224, 224}));
+        std::cout<< "Running inference on new data" << std::endl;
+        at::Tensor output = module.forward(inputs).toTensor();
+        std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
+        std::cout << "ok\n";
+
+        _return.assign("Hello World");
+    }
 };
 
 class ComputeHandlerFactory: public ComputeIfFactory {

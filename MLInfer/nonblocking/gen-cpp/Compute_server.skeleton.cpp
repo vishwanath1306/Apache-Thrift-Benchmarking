@@ -23,7 +23,7 @@ class ComputeHandler : virtual public ComputeIf {
     printf("computed_value\n");
   }
 
-  void compute_list(std::string& _return, const std::vector<int64_t> & values) {
+  void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values) {
     // Your implementation goes here
     printf("compute_list\n");
   }

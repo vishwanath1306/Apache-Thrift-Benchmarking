@@ -26,13 +26,15 @@ namespace logging = boost::log;
 namespace keywords = boost::log::keywords;
 
 
-void init_logging(std::string filename){
+void init_logging(){
+
     logging::add_file_log(
         
-        keywords::file_name=filename,
+        keywords::file_name="uniqueid_nb_4096.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name=filename,
-        keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%"
+        keywords::target_file_name="uniqueid_nb_4096.log",
+        keywords::format = "[%TimeStamp%]  [%ThreadID%] %Message%",
+        keywords::auto_flush = true
         );
 
         logging::add_common_attributes();
@@ -54,13 +56,24 @@ class RESTProxyHandler: public Http::Handler{
         }
 
         void onRequest(const Http::Request& request, Http::ResponseWriter response){
-            if(!unique_transport->isOpen()){
-                unique_transport->open();
-            }
+            // if(!unique_transport->isOpen()){
+            //     unique_transport->open();
+            // }
 
+            shared_ptr<TTransport> socket(new TSocket("127.0.0.1", 3067));
+            shared_ptr<TFramedTransport> transport(new TFramedTransport(socket));
+            shared_ptr<TCompactProtocol> protocol(new TCompactProtocol(transport));
+            shared_ptr<UniqueIDClient> unique_id_client(new UniqueIDClient(protocol));
+            
+            transport->open();
             std::string mono;
-            unique_client->compute_unique_id(mono, 100);
-            std::cout<<"The ID is "<<mono<<std::endl;
+            auto start = std::chrono::high_resolution_clock::now();
+            unique_id_client->compute_unique_id(mono, 100);
+            // unique_client->compute_unique_id(mono, 100); // Previous for spawning client. 
+            auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+            BOOST_LOG_TRIVIAL(info) << "The time to execute client (Microseconds): " << microseconds;
+            // std::cout<<"The ID is "<<mono<<std::endl;
             response.send(Http::Code::Ok, mono);
 
         }
@@ -70,8 +83,6 @@ class RESTProxyHandler: public Http::Handler{
 
 int main(int argc, char* argv[]){
     
-    init_logging("valimai_update.log");
-
     shared_ptr<TTransport> socket(new TSocket("127.0.0.1", 3067));
     shared_ptr<TFramedTransport> transport(new TFramedTransport(socket));
     shared_ptr<TCompactProtocol> protocol(new TCompactProtocol(transport));
@@ -83,6 +94,7 @@ int main(int argc, char* argv[]){
     rest_server.init();
     rest_server.setHandler(make_shared<RESTProxyHandler>(transport, unique_id_client));
     std::thread rest_thread([&](){
+        init_logging();
         rest_server.serve();
     });
 

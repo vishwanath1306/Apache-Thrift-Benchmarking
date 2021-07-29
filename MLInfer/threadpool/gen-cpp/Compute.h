@@ -23,7 +23,7 @@ class ComputeIf {
  public:
   virtual ~ComputeIf() {}
   virtual void computed_value(const int32_t row, const int32_t column) = 0;
-  virtual void compute_list(std::string& _return, const std::vector<int64_t> & values) = 0;
+  virtual void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values) = 0;
 };
 
 class ComputeIfFactory {
@@ -34,17 +34,17 @@ class ComputeIfFactory {
 
   virtual ComputeIf* getHandler(const ::apache::thrift::TConnectionInfo& connInfo) = 0;
   virtual void releaseHandler(ComputeIf* /* handler */) = 0;
-};
+  };
 
 class ComputeIfSingletonFactory : virtual public ComputeIfFactory {
  public:
   ComputeIfSingletonFactory(const ::std::shared_ptr<ComputeIf>& iface) : iface_(iface) {}
   virtual ~ComputeIfSingletonFactory() {}
 
-  virtual ComputeIf* getHandler(const ::apache::thrift::TConnectionInfo&) {
+  virtual ComputeIf* getHandler(const ::apache::thrift::TConnectionInfo&) override {
     return iface_.get();
   }
-  virtual void releaseHandler(ComputeIf* /* handler */) {}
+  virtual void releaseHandler(ComputeIf* /* handler */) override {}
 
  protected:
   ::std::shared_ptr<ComputeIf> iface_;
@@ -53,10 +53,10 @@ class ComputeIfSingletonFactory : virtual public ComputeIfFactory {
 class ComputeNull : virtual public ComputeIf {
  public:
   virtual ~ComputeNull() {}
-  void computed_value(const int32_t /* row */, const int32_t /* column */) {
+  void computed_value(const int32_t /* row */, const int32_t /* column */) override {
     return;
   }
-  void compute_list(std::string& /* _return */, const std::vector<int64_t> & /* values */) {
+  void compute_list(std::string& /* _return */, const std::vector<std::vector<std::vector<double> > > & /* values */) override {
     return;
   }
 };
@@ -70,9 +70,11 @@ typedef struct _Compute_computed_value_args__isset {
 class Compute_computed_value_args {
  public:
 
-  Compute_computed_value_args(const Compute_computed_value_args&);
-  Compute_computed_value_args& operator=(const Compute_computed_value_args&);
-  Compute_computed_value_args() : row(0), column(0) {
+  Compute_computed_value_args(const Compute_computed_value_args&) noexcept;
+  Compute_computed_value_args& operator=(const Compute_computed_value_args&) noexcept;
+  Compute_computed_value_args() noexcept
+                              : row(0),
+                                column(0) {
   }
 
   virtual ~Compute_computed_value_args() noexcept;
@@ -121,9 +123,9 @@ class Compute_computed_value_pargs {
 class Compute_computed_value_result {
  public:
 
-  Compute_computed_value_result(const Compute_computed_value_result&);
-  Compute_computed_value_result& operator=(const Compute_computed_value_result&);
-  Compute_computed_value_result() {
+  Compute_computed_value_result(const Compute_computed_value_result&) noexcept;
+  Compute_computed_value_result& operator=(const Compute_computed_value_result&) noexcept;
+  Compute_computed_value_result() noexcept {
   }
 
   virtual ~Compute_computed_value_result() noexcept;
@@ -164,15 +166,15 @@ class Compute_compute_list_args {
 
   Compute_compute_list_args(const Compute_compute_list_args&);
   Compute_compute_list_args& operator=(const Compute_compute_list_args&);
-  Compute_compute_list_args() {
+  Compute_compute_list_args() noexcept {
   }
 
   virtual ~Compute_compute_list_args() noexcept;
-  std::vector<int64_t>  values;
+  std::vector<std::vector<std::vector<double> > >  values;
 
   _Compute_compute_list_args__isset __isset;
 
-  void __set_values(const std::vector<int64_t> & val);
+  void __set_values(const std::vector<std::vector<std::vector<double> > > & val);
 
   bool operator == (const Compute_compute_list_args & rhs) const
   {
@@ -197,7 +199,7 @@ class Compute_compute_list_pargs {
 
 
   virtual ~Compute_compute_list_pargs() noexcept;
-  const std::vector<int64_t> * values;
+  const std::vector<std::vector<std::vector<double> > > * values;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -213,7 +215,8 @@ class Compute_compute_list_result {
 
   Compute_compute_list_result(const Compute_compute_list_result&);
   Compute_compute_list_result& operator=(const Compute_compute_list_result&);
-  Compute_compute_list_result() : success() {
+  Compute_compute_list_result() noexcept
+                              : success() {
   }
 
   virtual ~Compute_compute_list_result() noexcept;
@@ -283,11 +286,11 @@ class ComputeClient : virtual public ComputeIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void computed_value(const int32_t row, const int32_t column);
+  void computed_value(const int32_t row, const int32_t column) override;
   void send_computed_value(const int32_t row, const int32_t column);
   void recv_computed_value();
-  void compute_list(std::string& _return, const std::vector<int64_t> & values);
-  void send_compute_list(const std::vector<int64_t> & values);
+  void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values) override;
+  void send_compute_list(const std::vector<std::vector<std::vector<double> > > & values);
   void recv_compute_list(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -299,7 +302,7 @@ class ComputeClient : virtual public ComputeIf {
 class ComputeProcessor : public ::apache::thrift::TDispatchProcessor {
  protected:
   ::std::shared_ptr<ComputeIf> iface_;
-  virtual bool dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext);
+  virtual bool dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) override;
  private:
   typedef  void (ComputeProcessor::*ProcessFunction)(int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*, void*);
   typedef std::map<std::string, ProcessFunction> ProcessMap;
@@ -318,10 +321,10 @@ class ComputeProcessor : public ::apache::thrift::TDispatchProcessor {
 
 class ComputeProcessorFactory : public ::apache::thrift::TProcessorFactory {
  public:
-  ComputeProcessorFactory(const ::std::shared_ptr< ComputeIfFactory >& handlerFactory) :
+  ComputeProcessorFactory(const ::std::shared_ptr< ComputeIfFactory >& handlerFactory) noexcept :
       handlerFactory_(handlerFactory) {}
 
-  ::std::shared_ptr< ::apache::thrift::TProcessor > getProcessor(const ::apache::thrift::TConnectionInfo& connInfo);
+  ::std::shared_ptr< ::apache::thrift::TProcessor > getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) override;
 
  protected:
   ::std::shared_ptr< ComputeIfFactory > handlerFactory_;
@@ -339,7 +342,7 @@ class ComputeMultiface : virtual public ComputeIf {
     ifaces_.push_back(iface);
   }
  public:
-  void computed_value(const int32_t row, const int32_t column) {
+  void computed_value(const int32_t row, const int32_t column) override {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -348,7 +351,7 @@ class ComputeMultiface : virtual public ComputeIf {
     ifaces_[i]->computed_value(row, column);
   }
 
-  void compute_list(std::string& _return, const std::vector<int64_t> & values) {
+  void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values) override {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -390,11 +393,11 @@ class ComputeConcurrentClient : virtual public ComputeIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void computed_value(const int32_t row, const int32_t column);
+  void computed_value(const int32_t row, const int32_t column) override;
   int32_t send_computed_value(const int32_t row, const int32_t column);
   void recv_computed_value(const int32_t seqid);
-  void compute_list(std::string& _return, const std::vector<int64_t> & values);
-  int32_t send_compute_list(const std::vector<int64_t> & values);
+  void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double> > > & values) override;
+  int32_t send_compute_list(const std::vector<std::vector<std::vector<double> > > & values);
   void recv_compute_list(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

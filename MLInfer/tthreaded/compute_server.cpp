@@ -80,6 +80,8 @@ class ComputeHandler: public ComputeIf {
         std::cout<<"Finished computation"<<std::endl;
     }
     virtual void compute_list(std::string& _return, const std::vector<std::vector<std::vector<double>>>& values){
+        std::thread::id this_id = std::this_thread::get_id();
+        std::cout<<"Current Thread is: "<<this_id<<std::endl;
         torch::jit::script::Module module;
 
         std::vector<std::vector<std::vector<float>>> random_input(3, std::vector<std::vector<float>>(224, std::vector<float>(224, 1.0)));
@@ -104,7 +106,7 @@ class ComputeHandler: public ComputeIf {
         }
 
 
-        std::cout<<"Entering dangerous space"<<std::endl;
+        // std::cout<<"Entering dangerous space"<<std::endl;
 
         auto tensor = torch::empty({1 * 3 * 224 * 224});
         float* data = tensor.data_ptr<float>();
@@ -117,16 +119,16 @@ class ComputeHandler: public ComputeIf {
             }
         }
 
-        std::cout<<"Tensor values are: "<<std::endl;
-        std::cout << tensor.sizes() << std::endl;
+        // std::cout<<"Tensor values are: "<<std::endl;
+        // std::cout << tensor.sizes() << std::endl;
 
         std::vector<torch::jit::IValue> inputs;
 
         inputs.emplace_back(tensor.resize_({1, 3, 224, 224}));
-        std::cout<< "Running inference on new data" << std::endl;
+        // std::cout<< "Running inference on new data" << std::endl;
         at::Tensor output = module.forward(inputs).toTensor();
-        std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
-        std::cout << "ok\n";
+        // std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
+        // std::cout << "ok\n";
 
         _return.assign("Hello World");
     }

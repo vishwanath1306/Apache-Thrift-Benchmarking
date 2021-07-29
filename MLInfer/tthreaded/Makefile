@@ -21,7 +21,7 @@ server.o: $(SVRSRC)
 	$(CC) -o $@ $(SVRSRC) $(LIBS) $(TORCH_FLAGS)
 
 client.o: $(CLISRC)
-	$(CC) -o $@ $(CLISRC) $(LIBS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
+	$(CC) -o $@ $(CLISRC) $(CFLAGS) $(LIBS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
 	
 clean:
 	$(RM) -r gen-cpp

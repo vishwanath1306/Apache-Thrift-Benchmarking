@@ -123,6 +123,9 @@ class UniqueIDHandler: public UniqueIDIf{
         virtual void compute_unique_id(std::string& _return, const int32_t id){
 
                 // int32_t modified_value = id * 10;
+
+                std::thread::id this_id = std::this_thread::get_id();
+                std::cout<<"Current Thread is: "<<this_id<<std::endl;
                 
                 std::mutex thread_lock;
 

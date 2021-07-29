@@ -1,18 +1,5 @@
-
-# FROM yg397/thrift-microservice-deps:xenial
-
-# ARG NUM_CPUS=4
-
-# COPY ./ /compute-ttd
-# RUN cd /compute-ttd \
-#     && make server.o 
-
-# CMD ["./server.o"]
-
-# WORKDIR /compute-ttd
-
 FROM ubuntu:18.04
-ARG NUM_CPUS=4
+ARG NUM_CPUS=16
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential \

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-for i in {1..1000}
+for i in {1..50}
 do  
     echo $i
-    ./client.o &
-    sleep 0.001
+    curl http://localhost:9080 &
 done

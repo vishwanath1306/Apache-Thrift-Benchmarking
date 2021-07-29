@@ -1,6 +1,6 @@
 FROM ubuntu
 
-ARG NUM_CPUS=4
+ARG NUM_CPUS=16
 
 ARG DEBIAN_FRONTEND=noninteractive
 
