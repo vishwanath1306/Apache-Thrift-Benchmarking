@@ -2,6 +2,7 @@ TARGET = client server
 IDL = uniqueid.thrift
 SVRSRC = uniqueid_server.cpp gen-cpp/UniqueID.cpp
 CLISRC = uniqueid_client.cpp gen-cpp/UniqueID.cpp
+LOAD_CLI = uniqueid_client_1.cpp gen-cpp/UniqueID.cpp
 
 CC = g++
 LIBS = -lthrift -lthriftnb -levent -lpthread
@@ -22,6 +23,9 @@ server.o: $(SVRSRC)
 client.o: $(CLISRC)
 	$(CC) -o $@ $(CLISRC) $(LIBS) $(CFLAGS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
 	
+loadgen.o: $(LOAD_CLI)
+	$(CC) -o $@ $(LOAD_CLI) $(LIBS) $(CFLAGS) $(PTHREAD) $(BOOST_FLAGS)
+
 clean:
 	$(RM) -r gen-cpp
 	$(RM) $(TARGET)
