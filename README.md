@@ -35,3 +35,7 @@ cd echoservice-nb
 make client.o
 ./client.o
 ```
+
+# Running UniqueID Loadgenerator
+
+./loadgen.o [seconds] [requests/second] [client count]
