@@ -2,6 +2,7 @@ TARGET = client server
 IDL = hello.thrift
 SVRSRC = compute_server.cpp gen-cpp/Compute.cpp
 CLISRC = compute_client.cpp gen-cpp/Compute.cpp
+LOAD_CLI = compute_client_1.cpp gen-cpp/Compute.cpp
 
 CC = g++
 LIBS = -lthrift
@@ -12,6 +13,8 @@ BOOST_FLAGS	= -DBOOST_LOG_DYN_LINK -I$(HOME)/include -I/usr/include -L$(HOME)/li
 PISTACHE_FLAGS = -lpistache
 PTHREAD = -pthread
 TORCH_FLAGS = -I/libtorch/include -L/libtorch/lib -g -lstdc++ -pthread -ltorch_cpu -lc10
+
+
 all: client.o server.o
 
 gen-cpp/Message.cpp: $(IDL)
@@ -22,7 +25,10 @@ server.o: $(SVRSRC)
 
 client.o: $(CLISRC)
 	$(CC) -o $@ $(CLISRC) $(CFLAGS) $(LIBS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
-	
+
+loadgen.o: $(LOAD_CLI)
+	$(CC) -o $@ $(LOAD_CLI) $(LIBS) $(CFLAGS) $(PTHREAD) $(BOOST_FLAGS) 
+
 clean:
 	$(RM) -r gen-cpp
 	$(RM) $(TARGET)

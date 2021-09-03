@@ -51,23 +51,31 @@ void run_workload_gen(int64_t seconds, int64_t reqps){
 
     trans->open();
 
+    int64_t response = 0;
+
     while(true){
 
         if (counter == seconds){
             break;
+        }else{
+            response = 0;
         }
 
         for(int64_t i = 0; i < reqps; i++){
-            std::string msg;
+            std::string msg("processed");
             auto start = std::chrono::high_resolution_clock::now();
             client.compute_unique_id(msg, 100);
             // std::cout << msg << std::endl;
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
             long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
             BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
+            if(msg != "processed"){
+                response++;
+            }
         }
         // std::cout<<"Sent out "<<reqps<<" requests for "<<counter<<" seconds"<<std::endl;
         sleep(1);
+        std::cout << "The response value is: " << response << std::endl;
         ++counter;
     }
     

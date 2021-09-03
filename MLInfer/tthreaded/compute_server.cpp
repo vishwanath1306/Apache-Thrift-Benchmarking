@@ -119,9 +119,6 @@ class ComputeHandler: public ComputeIf {
             }
         }
 
-        // std::cout<<"Tensor values are: "<<std::endl;
-        // std::cout << tensor.sizes() << std::endl;
-
         std::vector<torch::jit::IValue> inputs;
 
         inputs.emplace_back(tensor.resize_({1, 3, 224, 224}));
