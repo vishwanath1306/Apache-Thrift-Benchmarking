@@ -130,7 +130,7 @@ class ComputeHandler: public ComputeIf {
         // std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
         // std::cout << "ok\n";
 
-        _return.assign("Hello World");
+        _return.assign("processed");
     }
 };
 

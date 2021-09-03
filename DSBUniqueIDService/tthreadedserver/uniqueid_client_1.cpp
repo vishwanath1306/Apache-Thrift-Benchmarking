@@ -40,7 +40,7 @@ void run_workload_gen(int64_t seconds, int64_t reqps){
     init_logging();
     
     shared_ptr<TTransport> trans;
-    trans = make_shared<TSocket>("localhost", 3066);
+    trans = make_shared<TSocket>("170.140.147.116", 3066);
     trans = make_shared<TFramedTransport>(trans);
     auto proto = make_shared<TJSONProtocol>(trans);
 
