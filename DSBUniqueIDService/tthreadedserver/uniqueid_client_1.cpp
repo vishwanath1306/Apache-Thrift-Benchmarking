@@ -21,13 +21,13 @@ using std::shared_ptr;
 namespace logging = boost::log;
 namespace keywords = boost::log::keywords;
 
-void init_logging(){
+void init_logging(std::string latency_log_file){
     
     logging::add_file_log(
         
-        keywords::file_name="uniqueid_ttd_loadgen_run_1.log",
+        keywords::file_name=latency_log_file,
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="uniqueid_ttd_loadgen_run_1.log",
+        keywords::target_file_name=latency_log_file,
         keywords::format = "[%TimeStamp%] [%ThreadID%] %Message%",
         keywords::auto_flush = true
         );
@@ -37,7 +37,7 @@ void init_logging(){
 
 void run_workload_gen(int64_t seconds, int64_t reqps){
 
-    init_logging();
+    // init_logging();
     
     shared_ptr<TTransport> trans;
     trans = make_shared<TSocket>("170.140.147.116", 3066);
@@ -84,14 +84,16 @@ void run_workload_gen(int64_t seconds, int64_t reqps){
 
 
 int main(int argc, char* argv[]){
-    init_logging();
+    
 
     int64_t seconds = atoi(argv[1]);
     int64_t reqps = atoi(argv[2]);
     int64_t no_of_clients = atoi(argv[3]);
-
+    std::string latency_file = argv[4];
     std::vector<std::thread> threads;
-
+    
+    init_logging(latency_file);
+    
     for(int i=0 ; i < no_of_clients; i++){
         std::cout<<"Spawned Client: "<< i + 1<<std::endl;
         threads.push_back(std::thread(run_workload_gen, seconds, reqps));
