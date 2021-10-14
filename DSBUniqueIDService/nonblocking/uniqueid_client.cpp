@@ -67,12 +67,12 @@ class RESTProxyHandler: public Http::Handler{
             
             transport->open();
             std::string mono;
-            auto start = std::chrono::high_resolution_clock::now();
+            // auto start = std::chrono::high_resolution_clock::now();
             unique_id_client->compute_unique_id(mono, 100);
             // unique_client->compute_unique_id(mono, 100); // Previous for spawning client. 
-            auto elapsed = std::chrono::high_resolution_clock::now() - start;
-            long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
-            BOOST_LOG_TRIVIAL(info) << "The time to execute client (Microseconds): " << microseconds;
+            // auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            // long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+            // BOOST_LOG_TRIVIAL(info) << "The time to execute client (Microseconds): " << microseconds;
             // std::cout<<"The ID is "<<mono<<std::endl;
             response.send(Http::Code::Ok, mono);
 

@@ -26,9 +26,9 @@ void init_logging(){
     
     logging::add_file_log(
         
-        keywords::file_name="uniqueid_ttd_multiple_1.log",
+        keywords::file_name="uniqueid_ttd_multiple_1000.log",
         keywords::open_mode=std::ios_base::app,
-        keywords::target_file_name="uniqueid_ttd_multiple_1.log",
+        keywords::target_file_name="uniqueid_ttd_multiple_1000.log",
         keywords::format = "[%TimeStamp%] [%ThreadID%] %Message%",
         keywords::auto_flush = true
         );
@@ -55,10 +55,7 @@ class RESTProxyHandler: public Http::Handler{
         }
 
         void onRequest(const Http::Request& request, Http::ResponseWriter response){
-            // if(!unique_transport->isOpen()){
-            //     unique_transport->open();
-            // }
-
+            
             shared_ptr<TTransport> socket(new TSocket("127.0.0.1", 3066));
             shared_ptr<TFramedTransport> transport(new TFramedTransport(socket));
             shared_ptr<TJSONProtocol> protocol(new TJSONProtocol(transport));
@@ -67,14 +64,11 @@ class RESTProxyHandler: public Http::Handler{
             transport->open();
 
             std::string mono;
-            auto start = std::chrono::high_resolution_clock::now();
+            // auto start = std::chrono::high_resolution_clock::now();
             unique_id_client->compute_unique_id(mono, 100);
-            // unique_client->compute_unique_id(mono, 100);
-            auto elapsed = std::chrono::high_resolution_clock::now() - start;
-            long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
-            BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;
-            // std::cout<<"The ID is "<<mono<<std::endl;
-            
+            // auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            // long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+            // BOOST_LOG_TRIVIAL(info) <<"The time to execute client (Microseconds): "<< microseconds;            
             transport->close();
             response.send(Http::Code::Ok, mono);
 
@@ -92,7 +86,7 @@ int main(int argc, char* argv[]){
     shared_ptr<UniqueIDClient> unique_id_client(new UniqueIDClient(protocol));
 
     Address addr("0.0.0.0", 9080);
-    auto opts = Http::Endpoint::options().threads(1);
+    auto opts = Http::Endpoint::options().threads(10);
     Http::Endpoint rest_server(addr);
     rest_server.init();
     rest_server.setHandler(make_shared<RESTProxyHandler>(transport, unique_id_client));
