@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+    uniqueid-async-ttd:
+        ports:
+          - '3076:3076'
+        image: 'uniqueid-async-ttd:latest'
+        hostname: 'uniqueid-async-ttd'
+        container_name: 'uniqueid-async-ttd'
+    uniqueid-async-nb:
+      ports:
+        - '3077:3077'
+      image: 'uniqueid-async-nb:latest'
+      hostname: 'uniqueid-async-nb'
+      container_name: 'uniqueid-async-nb'
+    uniqueid-async-tp:
+      ports:
+        - '3078:3078'
+      image: 'uniqueid-async-tp:latest'
+      hostname: 'uniqueid-async-tp'
+      container_name: 'uniqueid-async-tp'
