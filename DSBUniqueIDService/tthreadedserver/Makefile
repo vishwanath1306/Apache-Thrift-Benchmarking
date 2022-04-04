@@ -25,7 +25,7 @@ client.o: $(CLISRC)
 	$(CC) -o $@ $(CLISRC) $(LIBS) $(CFLAGS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
 
 loadgen.o: $(LOAD_CLI)
-	$(CC) -o $@ $(LOAD_CLI) $(LIBS) $(CFLAGS) $(PISTACHE_FLAGS) $(PTHREAD) $(BOOST_FLAGS)
+	$(CC) -o $@ $(LOAD_CLI) $(LIBS) $(CFLAGS) $(PTHREAD) $(BOOST_FLAGS)
 	
 clean:
 	$(RM) -r gen-cpp
