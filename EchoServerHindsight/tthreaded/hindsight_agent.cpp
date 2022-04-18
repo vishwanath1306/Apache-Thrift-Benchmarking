@@ -9,3 +9,12 @@ extern "C"{
     #include "tracer/common.h"
 }
 
+HindsightAgentAPI* init_agentapi(const char* name){
+    HindsightAgentAPI* api = hindsight_agentapi_init(name);
+
+    std::cout<<"Initialized existing buffer manager "<<name<<std::endl;
+
+    return api;
+
+}
+

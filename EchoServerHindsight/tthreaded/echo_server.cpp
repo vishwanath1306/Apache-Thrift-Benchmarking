@@ -25,15 +25,6 @@ extern "C"{
     #include "tracer/agentapi.h"
 }
 
-HindsightAgentAPI* init_agentapi(const char* name){
-    HindsightAgentAPI* api = hindsight_agentapi_init(name);
-
-    cout<<"Initialized existing buffer manager "<<name<<endl;
-
-    return api;
-
-}
-
 class EchoServerHandler: public EchoServiceIf {
         public: 
             virtual void call(const TraceContext& req, const string &message){
@@ -64,6 +55,7 @@ int main(){
     auto transport_factory = make_shared<TFramedTransportFactory>();
     auto protocol_factory = make_shared<TJSONProtocolFactory>();
 
+    hindsight_init("echotthreaded");
     TThreadedServer server(proc_fac, transport_server, transport_factory, protocol_factory);
     cout<<"Starting servier at port 3046"<<endl;
     server.serve();
