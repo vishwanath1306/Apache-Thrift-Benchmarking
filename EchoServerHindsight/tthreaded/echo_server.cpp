@@ -22,12 +22,24 @@ using namespace echoservice;
 
 extern "C"{
     #include "tracer/hindsight.h"
+    #include "tracer/agentapi.h"
+}
+
+HindsightAgentAPI* init_agentapi(const char* name){
+    HindsightAgentAPI* api = hindsight_agentapi_init(name);
+
+    cout<<"Initialized existing buffer manager "<<name<<endl;
+
+    return api;
+
 }
 
 class EchoServerHandler: public EchoServiceIf {
         public: 
             virtual void call(const TraceContext& req, const string &message){
+                hindsight_begin(req.req_id);
                 cout<<req.req_id<<endl;
+                hindsight_end();
             }
 };
 

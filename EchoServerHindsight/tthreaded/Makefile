@@ -4,7 +4,7 @@ SVRSRC = echo_server.cpp gen-cpp/EchoService.cpp gen-cpp/echoservice_types.cpp
 CLISRC = echo_client.cpp gen-cpp/EchoService.cpp gen-cpp/echoservice_types.cpp
 
 CC = g++
-LIBS = -lthrift
+LIBS = -lthrift -ltracer
 CFLAGS = -Wall -std=c++17
 THRIFT = thrift -gen cpp
 # BOOST_FLAGS = -lboost_log
