@@ -30,6 +30,8 @@ class EchoServerHandler: public EchoServiceIf {
             virtual void call(const TraceContext& req, const string &message){
                 hindsight_begin(req.req_id);
                 cout<<req.req_id<<endl;
+                auto sleep_val = (rand() % 3) +1;
+                sleep(sleep_val);
                 hindsight_end();
             }
 };
