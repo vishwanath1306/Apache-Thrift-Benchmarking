@@ -29,7 +29,7 @@ class EchoServerHandler: public EchoServiceIf {
         public: 
             virtual void call(const TraceContext& req, const string &message){
                 hindsight_begin(req.req_id);
-                cout<<req.req_id<<endl;
+                cerr<<req.req_id<<endl;
                 auto sleep_val = (rand() % 3) +1;
                 sleep(sleep_val);
                 hindsight_end();
@@ -59,6 +59,6 @@ int main(){
 
     hindsight_init("echotthreaded");
     TThreadedServer server(proc_fac, transport_server, transport_factory, protocol_factory);
-    cout<<"Starting servier at port 3046"<<endl;
+    cerr<<"Starting server at port 3046"<<endl;
     server.serve();
 }
