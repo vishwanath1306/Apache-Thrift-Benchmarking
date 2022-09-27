@@ -45,7 +45,7 @@ RUN cp echotthreaded.conf /etc/hindsight_conf; \
     cp echottdhs_supervisor.conf /etc/echottdhs_supervisor.conf; \
     make server.o && cp server.o /etc/server.o
 
-EXPOSE 5252
+EXPOSE 5050
 EXPOSE 3046
 
 CMD [ "supervisord", "-c", "/etc/echottdhs_supervisor.conf" ]
