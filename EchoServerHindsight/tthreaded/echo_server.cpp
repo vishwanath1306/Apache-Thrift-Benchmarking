@@ -29,9 +29,17 @@ class EchoServerHandler: public EchoServiceIf {
         public: 
             virtual void call(const TraceContext& req, const string &message){
                 hindsight_begin(req.req_id);
-                cerr<<req.req_id<<endl;
+                char mess[32];
+
+                sprintf(mess, "request_%ld", req.req_id);
+                hindsight_tracepoint(mess, sizeof(mess));
+                cout<<req.req_id<<endl;
                 auto sleep_val = (rand() % 3) +1;
                 sleep(sleep_val);
+                if ( (req.req_id % 2) == 1 ){
+                    std::cout<<"Sending trigger: "<<req.req_id<<std::endl;
+                    hindsight_trigger(req.req_id);
+                }
                 hindsight_end();
             }
 };
@@ -59,6 +67,6 @@ int main(){
 
     hindsight_init("echotthreaded");
     TThreadedServer server(proc_fac, transport_server, transport_factory, protocol_factory);
-    cerr<<"Starting server at port 3046"<<endl;
+    cout<<"Starting server at port 3046"<<endl;
     server.serve();
 }

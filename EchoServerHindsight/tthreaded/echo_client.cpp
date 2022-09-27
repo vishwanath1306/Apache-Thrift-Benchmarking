@@ -25,7 +25,7 @@ void run_workload_gen(int64_t seconds, int64_t reqps){
     int64_t counter = 0;
     EchoServiceClient client(proto);
     trans->open();
-
+    std::cout<<"Opened transport"<<std::endl;
     int64_t response = 0;
 
     while(true){
@@ -37,10 +37,11 @@ void run_workload_gen(int64_t seconds, int64_t reqps){
         }
 
         for(int64_t i = 0; i < reqps; i++){
+            std::cout<<"Inside for loop"<<std::endl;
             auto context =  new TraceContext();
             context->req_id = std::rand();
             context->baggage = "";
-
+            std::cout<<context->req_id<<std::endl;
             client.call(*context, "extra information");
         }
     }
