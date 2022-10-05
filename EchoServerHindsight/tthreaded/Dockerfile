@@ -4,8 +4,6 @@ ARG NUM_CPUS=20
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-COPY ./ /echohindsight-tthreaded
-
 ARG SSH_PRIVATE_KEY
 
 
@@ -39,16 +37,5 @@ RUN git clone git@github.com:SimBioSysLab/hindsight.git ; \
     make && make install; ldconfig ;\
     cd ../agent && go build -o agent cmd/agent2/main.go; \
     mv agent /usr/local/bin/ ;
-
-WORKDIR /echohindsight-tthreaded
-RUN cp echotthreaded.conf /etc/hindsight_conf; \
-    cp echottdhs_supervisor.conf /etc/echottdhs_supervisor.conf; \
-    make server.o && cp server.o /etc/server.o
-
-EXPOSE 5050
-EXPOSE 3046
-
-CMD [ "supervisord", "-c", "/etc/echottdhs_supervisor.conf" ]
-
 
 # docker run --rm -it  -p 3046:3046/tcp -p 5252:5252/tcp --shm-size 8G echottdhs:latest
