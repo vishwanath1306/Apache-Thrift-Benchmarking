@@ -5,7 +5,7 @@ For building base docker image
 docker build -t thrift-hindsight --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" .
 ```
 
-For building the hs server
+For building the server with Hindsight agent
 ```
 docker build -f Dockerfile_server -t echottdhs .
 ```
