@@ -34,8 +34,8 @@ class EchoServerHandler: public EchoServiceIf {
                 sprintf(mess, "request_%ld", req.req_id);
                 hindsight_tracepoint(mess, sizeof(mess));
                 cout<<req.req_id<<endl;
-                auto sleep_val = (rand() % 3) +1;
-                sleep(sleep_val);
+                // auto sleep_val = (rand() % 3) +1;
+                // sleep(sleep_val);
                 if ( (req.req_id % 2) == 1 ){
                     std::cout<<"Sending trigger: "<<req.req_id<<std::endl;
                     hindsight_trigger(req.req_id);

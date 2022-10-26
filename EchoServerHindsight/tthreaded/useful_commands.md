@@ -1,8 +1,13 @@
 # Docker Build commands
 
-For building docker image
+For building base docker image
 ```
-docker build -t echottdhs --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" .
+docker build -t thrift-hindsight --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" .
+```
+
+For building the hs server
+```
+docker build -f Dockerfile_server -t echottdhs .
 ```
 
 Deploying Docker container
